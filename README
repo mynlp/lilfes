@@ -7,13 +7,18 @@ See "manual/index.html" for details.
   % gzip -dc < liblilfes-x.x.x.tar.gz | tar xvf -
 
 2. Generate "Makefile" by "configure".  You can see many options
-specific to LiLFeS by "-h" option.
+   specific to LiLFeS by "-h" option.
+
   % ./configure
-If you want to install lilfes in your home directory, specify
-"--prefix=$HOME" option.
+
+  If you want to install lilfes in your home directory, specify
+  "--prefix=$HOME" option.
+
   % ./configure --prefix=$HOME
 
 3. make
+
+(* Bison(yacc) and flex is necessary to make.)
 
 4. make install
 
