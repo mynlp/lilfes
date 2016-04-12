@@ -1,10 +1,10 @@
 dnl ######################################################################
 dnl
-dnl   $Id: configure.in,v 1.56 2010-06-10 08:38:10 hkhana Exp $
+dnl   $Id: configure.ac,v 1.56 2010-06-10 08:38:10 hkhana Exp $
 dnl   Copyright (c) 2000, MIYAO Yusuke
 dnl   You may distribute under the terms of the Artistic License.
 dnl
-dnl   Name: configure.in
+dnl   Name: configure.ac
 dnl   Author: MIYAO Yusuke (yusuke@is.s.u-tokyo.ac.jp)
 dnl   Time-stamp: <2000-05-10 13:15:15 yusuke>
 dnl   Purpose: Script for autoconf
