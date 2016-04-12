@@ -19,12 +19,10 @@ See "manual/index.html" for details.
 
 3. make
 
-   (* Bison(yacc) and flex is necessary to make.)
-
 4. make install
 
 
 For maintainers:
   Generate "configure" file by the following procedure:
   libtoolize --force; aclocal; autoheader; automake --add-missing --foreign; autoconf
-
+  (* Bison(yacc) and flex is necessary to make.)

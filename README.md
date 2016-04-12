@@ -3,6 +3,7 @@ LiLFeS 1.4 -- Installation Procedure
 
 See "manual/index.html" for details.
 
+
 1. Unpack the package
 ---------------------
 
@@ -10,6 +11,7 @@ See "manual/index.html" for details.
    (x.x.x is a version of LiLFeS).
 
    % gzip -dc < liblilfes-x.x.x.tar.gz | tar xvf -
+
 
 2. Generate "Makefile" by "configure"
 -------------------------------------
@@ -23,16 +25,20 @@ See "manual/index.html" for details.
 
    % ./configure --prefix=$HOME
 
+
 3. make
 -------
 
-   (* Bison(yacc) and flex is necessary to make.)
 
 4. make install
 ---------------
 
 
-For maintainers:
-  Generate "configure" file by the following procedure:
+
+### For maintainers:
+
+Generate "configure" file by the following procedure:
+
   libtoolize --force; aclocal; autoheader; automake --add-missing --foreign; autoconf
 
+  (* Bison(yacc) and flex is necessary to make.)
