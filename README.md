@@ -39,6 +39,10 @@ See "manual/index.html" for details.
 
 Generate "configure" file by the following procedure:
 
-  libtoolize --force; aclocal; autoheader; automake --add-missing --foreign; autoconf
+  % libtoolize --force; aclocal; autoheader; automake --add-missing --foreign; autoconf
+
+and run the "configure" file with "--enable-maintainer-mode":
+
+  % ./configure --enable-maintainer-mode
 
   (* Bison(yacc) and flex is necessary to make.)
