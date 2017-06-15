@@ -23,6 +23,10 @@ AM_INIT_AUTOMAKE([subdir-objects])
 AC_DEFINE_UNQUOTED(LILFES_PACKAGE, "$PACKAGE", [Name of package])
 AC_DEFINE_UNQUOTED(LILFES_VERSION, "$VERSION", [Version number of package])
 
+dnl comment out if you want to rebuild configure, Makefile.in etc.
+AM_MAINTAINER_MODE
+
+
 AC_CONFIG_MACRO_DIR([m4])
 
 # Check for C++11
