@@ -448,6 +448,18 @@ lexer_t::~lexer_t()
 		delete l;
 }
 
+lexer_t& lexer_t::operator=(const lexer_t &lx)
+{
+	if( l != lx.l ) {
+		if( l && l->decRef() == 0 )
+			delete l;
+		l = lx.l;
+		if( l )
+			l->incRef();
+	}
+	return *this;
+}
+
 } // namespace lilfes
 
 
