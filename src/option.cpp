@@ -490,7 +490,13 @@ static void init3()
 #endif
 }
 
+static void term3()
+{
+	lilfes_flag::Cleanup();
+}
+
 static InitFunction IF3(init3, 200);
+static TermFunction TF3(term3, 200);
 
 /**
   * @predicate	= lilfes_flag(+OPT,-ARG) 

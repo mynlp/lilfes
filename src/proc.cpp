@@ -18,6 +18,7 @@
 ///  </overview>
 /// <see>proc.h</see>
 #include "proc.h"
+#include <cstring>
 
 #include "machine.h"
 #include "builtin.h"
@@ -516,7 +517,7 @@ static void init()
 	codelist fails;
 	fails.AddCode(C_FAIL);
 	fails.EndCode();
-	failcode = fails;
+	failcode = fails.Share();
 
 	t = new type("true", module::CoreModule()); t->SetAsChildOf(t_pred[0]); t->Fix();
 	new proc_builtin(t, 0, new proc_truethunk(0)); 
@@ -524,6 +525,7 @@ static void init()
 
 static void term() 
 {
+	delete[] failcode;
 	procedure::terminate();
 //	delete fail; 
 }
@@ -551,7 +553,12 @@ procedure::procedure(const type *inireptype, uint ia)
 
 procedure::~procedure() 
 { 
-//	delete cl;
+	// Clean up codelists
+	for( uint i = 0; i < cls.size(); i++ )
+	{
+		delete[] cls[i].cl;
+	}
+	cls.clear();
 }
 
 procedure *procedure::SearchByThunk(procthunk *p)
@@ -565,7 +572,7 @@ procedure *procedure::SearchByThunk(procthunk *p)
 	return NULL;
 }
 
-void procedure::AddCodelist(code *c, const type *toptype /*= NULL*/) 
+void procedure::AddCodelist(codelist *cl, const type *toptype /*= NULL*/)
 { 
 	if( special )
 	{
@@ -574,17 +581,23 @@ void procedure::AddCodelist(code *c, const type *toptype /*= NULL*/)
 	}
 #ifdef DEBUG
 	if( DEB )
-		cout << "procedure::AddCodelist " << GetName() << ", addr = " << hex << reinterpret_cast<ptr_int>(c) << dec << endl;
+		cout << "procedure::AddCodelist " << GetName() << ", addr = " << hex << reinterpret_cast<ptr_int>(cl) << dec << endl;
 #endif
+	// Copy the code from the codelist to ensure the procedure owns its own copy
+	uint len = cl->GetLen();
+	code *c = (*cl);  // Get the code pointer (end-coded)
+	code *cCopy = new code[len];
+	memcpy(cCopy, c, len * sizeof(code));
+	
 	cls.push_back(proc_t());
 	proc_t &p = cls.back();
-	p.cl = c; 
+	p.cl = cCopy; 
 	p.tt = toptype; 
 	p.instant = false;
 	SetThunk(new proc_selectthunk(this, arity));
 }
 
-void procedure::AddCodelistSTG(code *c, const type *toptype, sserial ss) 
+void procedure::AddCodelistSTG(codelist *cl, const type *toptype, sserial ss) 
 { 
 	if( special )
 	{
@@ -593,18 +606,22 @@ void procedure::AddCodelistSTG(code *c, const type *toptype, sserial ss)
 	}
 #ifdef DEBUG
 	if( DEB )
-		cout << "procedure::AddCodelistSTG " << GetName() << ", addr = " << hex << reinterpret_cast<ptr_int>(c) << dec << endl;
+		cout << "procedure::AddCodelistSTG " << GetName() << ", addr = " << hex << reinterpret_cast<ptr_int>(cl) << dec << endl;
 #endif
 	cls.push_back(proc_t());
 	proc_t &p = cls.back();
-	p.cl = c; 
+	code *c = (*cl);
+	uint len = cl->GetLen();
+	code *cCopy = new code[len];
+	memcpy(cCopy, c, len * sizeof(code));
+	p.cl = cCopy;
 	p.tt = toptype; 
 	p.instant = true;
 	p.ts = ss;
 	SetThunk(new proc_selectthunk(this, arity));
 }
 
-void procedure::AddCodelistINT(code *c, const type *toptype, mint i) 
+void procedure::AddCodelistINT(codelist *cl, const type *toptype, mint i)
 { 
 	if( special )
 	{
@@ -613,18 +630,22 @@ void procedure::AddCodelistINT(code *c, const type *toptype, mint i)
 	}
 #ifdef DEBUG
 	if( DEB )
-		cout << "procedure::AddCodelistINT " << GetName() << ", addr = " << hex << reinterpret_cast<ptr_int>(c) << dec << endl;
+		cout << "procedure::AddCodelistINT " << GetName() << ", addr = " << hex << reinterpret_cast<ptr_int>(cl) << dec << endl;
 #endif
 	cls.push_back(proc_t());
 	proc_t &p = cls.back(); 
-	p.cl = c; 
+	code *c = (*cl);
+	uint len = cl->GetLen();
+	code *cCopy = new code[len];
+	memcpy(cCopy, c, len * sizeof(code));
+	p.cl = cCopy;
 	p.tt = toptype; 
 	p.instant = true;
 	p.ti = i;
 	SetThunk(new proc_selectthunk(this, arity));
 }
 
-void procedure::AddCodelistTop(code *c, const type *toptype /*= NULL*/) 
+void procedure::AddCodelistTop(codelist *cl, const type *toptype /*= NULL*/) 
 { 
 	if( special )
 	{
@@ -633,7 +654,7 @@ void procedure::AddCodelistTop(code *c, const type *toptype /*= NULL*/)
 	}
 #ifdef DEBUG
 	if( DEB )
-		cout << "procedure::AddCodelist " << GetName() << ", addr = " << hex << reinterpret_cast<ptr_int>(c) << dec << endl;
+		cout << "procedure::AddCodelist " << GetName() << ", addr = " << hex << reinterpret_cast<ptr_int>(cl) << dec << endl;
 #endif
 	uint s = cls.size();
 	cls.push_back(proc_t());
@@ -641,13 +662,17 @@ void procedure::AddCodelistTop(code *c, const type *toptype /*= NULL*/)
 		cls[j] = cls[j-1];
 	
 	proc_t &p = cls[0]; 
-	p.cl = c; 
+	code *c = (*cl);
+	uint len = cl->GetLen();
+	code *cCopy = new code[len];
+	memcpy(cCopy, c, len * sizeof(code));
+	p.cl = cCopy;
 	p.tt = toptype; 
 	p.instant = false;
 	SetThunk(new proc_selectthunk(this, arity));
 }
 
-void procedure::AddCodelistTopSTG(code *c, const type *toptype, sserial ss) 
+void procedure::AddCodelistTopSTG(codelist *cl, const type *toptype, sserial ss) 
 { 
 	if( special )
 	{
@@ -656,7 +681,7 @@ void procedure::AddCodelistTopSTG(code *c, const type *toptype, sserial ss)
 	}
 #ifdef DEBUG
 	if( DEB )
-		cout << "procedure::AddCodelistSTG " << GetName() << ", addr = " << hex << reinterpret_cast<ptr_int>(c) << dec << endl;
+		cout << "procedure::AddCodelistSTG " << GetName() << ", addr = " << hex << reinterpret_cast<ptr_int>(cl) << dec << endl;
 #endif
 	uint s = cls.size();
 	cls.push_back(proc_t());
@@ -664,14 +689,18 @@ void procedure::AddCodelistTopSTG(code *c, const type *toptype, sserial ss)
 		cls[j] = cls[j-1];
 	
 	proc_t &p = cls[0]; 
-	p.cl = c;
+	code *c = (*cl);
+	uint len = cl->GetLen();
+	code *cCopy = new code[len];
+	memcpy(cCopy, c, len * sizeof(code));
+	p.cl = cCopy;
 	p.tt = toptype; 
 	p.instant = true;
 	p.ts = ss;
 	SetThunk(new proc_selectthunk(this, arity));
 }
 
-void procedure::AddCodelistTopINT(code *c, const type *toptype, mint i) 
+void procedure::AddCodelistTopINT(codelist *cl, const type *toptype, mint i)
 { 
 	if( special )
 	{
@@ -680,7 +709,7 @@ void procedure::AddCodelistTopINT(code *c, const type *toptype, mint i)
 	}
 #ifdef DEBUG
 	if( DEB )
-		cout << "procedure::AddCodelistINT " << GetName() << ", addr = " << hex << reinterpret_cast<ptr_int>(c) << dec << endl;
+		cout << "procedure::AddCodelistINT " << GetName() << ", addr = " << hex << reinterpret_cast<ptr_int>(cl) << dec << endl;
 #endif
 	uint s = cls.size();
 	cls.push_back(proc_t());
@@ -688,7 +717,11 @@ void procedure::AddCodelistTopINT(code *c, const type *toptype, mint i)
 		cls[j] = cls[j-1];
 	
 	proc_t &p = cls[0]; 
-	p.cl = c; 
+	code *c = (*cl);
+	uint len = cl->GetLen();
+	code *cCopy = new code[len];
+	memcpy(cCopy, c, len * sizeof(code));
+	p.cl = cCopy;
 	p.tt = toptype; 
 	p.instant = true;
 	p.ti = i;
@@ -723,27 +756,27 @@ proc_builtin::proc_builtin(const type *ininame, uint ia, procthunk *pt)
 	SetThunk(pt);
 }
 
-void proc_builtin::AddCodelist(code *, const type * /*toptype*/ /*= NULL*/) 
+void proc_builtin::AddCodelist(codelist *cl, const type *toptype)
 { 
 	RUNERR("Built-in procedure '" << GetName() << "' cannot be redefined");
 }
-void proc_builtin::AddCodelistINT(code *, const type * /*toptype*/ /*= NULL*/, mint) 
+void proc_builtin::AddCodelistINT(codelist *cl, const type * /*toptype*/ /*= NULL*/, mint)
 { 
 	RUNERR("Built-in procedure '" << GetName() << "' cannot be redefined");
 }
-void proc_builtin::AddCodelistSTG(code *, const type *, sserial )
+void proc_builtin::AddCodelistSTG(codelist *cl, const type *toptype, sserial )
 { 
 	RUNERR("Built-in procedure '" << GetName() << "' cannot be redefined");
 }
-void proc_builtin::AddCodelistTop(code *, const type * /*toptype*/ /*= NULL*/) 
+void proc_builtin::AddCodelistTop(codelist *cl, const type *toptype)
 { 
 	RUNERR("Built-in procedure '" << GetName() << "' cannot be redefined");
 }
-void proc_builtin::AddCodelistTopINT(code *, const type * /*toptype*/ /*= NULL*/, mint) 
+void proc_builtin::AddCodelistTopINT(codelist *cl, const type * /*toptype*/ /*= NULL*/, mint)
 { 
 	RUNERR("Built-in procedure '" << GetName() << "' cannot be redefined");
 }
-void proc_builtin::AddCodelistTopSTG(code *, const type *, sserial ) 
+void proc_builtin::AddCodelistTopSTG(codelist *cl, const type *toptype, sserial )
 { 
 	RUNERR("Built-in procedure '" << GetName() << "' cannot be redefined");
 }
@@ -811,7 +844,7 @@ void procedure::Compile()
 			cl.AddCode((ushort)-1);
 			cl.AddCode(C_FAIL);
 			cl.EndCode();
-			failCode = cl;
+			failCode = cl.Share();
 		}
 
 		uint ncls = cls.size();
@@ -1043,6 +1076,7 @@ void procedure::Compile()
 				Bitmap *bm = it->second;
 				bm->Merge(*defstg);
 				ishash.insert(make_pair(it->first, MakeCaller(ncls, bm, trace, failCode, tracetype)));
+				delete bm;
 			}
 			
 			for( _HASHMAP<mint, Bitmap *>::const_iterator it = pihash.begin();
@@ -1051,6 +1085,7 @@ void procedure::Compile()
 				Bitmap *bm = it->second;
 				bm->Merge(*defint);
 				iihash.insert(make_pair(it->first, MakeCaller(ncls, bm, trace, failCode, tracetype)));
+				delete bm;
 			}
 
 			SetThunk(new proc_fullthunk(parr, ishash, iihash, arity));
@@ -1208,7 +1243,7 @@ code *procedure::MakeCaller(uint ncls, Bitmap *clx, bool trace, code *failCode, 
 	if( DEB )
 		cl.DebugOutput();
 #endif
-		result = cl;
+		result = cl.Share();
 resulted: ;
 	}
 	return result;

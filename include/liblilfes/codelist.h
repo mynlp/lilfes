@@ -181,7 +181,15 @@ public:
 	codelist();
 	virtual ~codelist();
 
+private:
+	bool m_shared;  // true if cp is shared (not owned by this codelist)
+
+public:
+	void SetShared() { m_shared = true; }
+	bool IsShared() const { return m_shared; }
+
 	operator code *() { ASSERT(freezed); return cp; }
+	code *Share() { ASSERT(freezed); m_shared = true; return cp; }
 
 	void Insert(int place, int len);
 	void Delete(int place, int len);
@@ -190,6 +198,10 @@ public:
 
 	int GetLen() { return len; }
 	int Current() { return len; }
+
+	// Release ownership of cp. Returns cp and sets it to NULL.
+	// The caller takes ownership of the returned pointer.
+	code * Release() { code *tmp = cp; cp = NULL; return tmp; }
 
 // Labelling function.
 	void SetLabelDef(LabelDef *ld);

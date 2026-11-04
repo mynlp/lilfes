@@ -295,6 +295,14 @@ namespace lilfes {
 
 _HASHMAP<string, parsevar *> vars;
 
+void CleanupVars() {
+	for( _HASHMAP<string, parsevar *>::const_iterator it = vars.begin();
+		 it != vars.end(); ++it ) {
+		delete it->second;
+	}
+	vars.clear();
+}
+
 int yylex(YYSTYPE *yylvalp, void *parm);
 
 %}
@@ -303,8 +311,8 @@ int yylex(YYSTYPE *yylvalp, void *parm);
 
 top:	  /* empty */	{ }
 	| top TOK_EOF   { }
-	| top typedef 	{ errored = false; free_dups(); vars.clear();  }
-	| top command 	{ errored = false; free_dups(); vars.clear();  }
+	| top typedef 	{ errored = false; free_dups(); CleanupVars();  }
+	| top command 	{ errored = false; free_dups(); CleanupVars();  }
 	| top error { if( PARM->mach->getLexer()->Isatty() ) { PARM->mach->getLexer()->Flush(); YYABORT; } } /* 
 	*/ period { yyerrok; PARM->mach->getLexer()->SetParsing(false); errored = false; }
 ;
@@ -811,13 +819,14 @@ command: c_desc period
 					{
 						procedure *p = procedure::New(((pclause *)pt)->GetRepType(), info->ndefarg);
 						if     ( info->is_toparg && info->toparg == t_int )
-							p->AddCodelistINT(*l, info->toparg, info->toparg_int);
+							p->AddCodelistINT(l, info->toparg, info->toparg_int);
 						else if( info->is_toparg && info->toparg == t_stg )
-							p->AddCodelistSTG(*l, info->toparg, info->toparg_stg);
+							p->AddCodelistSTG(l, info->toparg, info->toparg_stg);
 						else
-							p->AddCodelist(*l, info->toparg);
+							p->AddCodelist(l, info->toparg);
 					}
 					else if( pt->GetClassName() == pclause::className )
+				delete l;
 					{
 	#ifdef DEBUG
 						if( DEB )
@@ -834,7 +843,7 @@ command: c_desc period
 	#if defined(PROFILE)
 						delete profx;
 	#endif	/* defined(PROFILE) */
-						vars.clear();
+						CleanupVars();
 						bool result;
 						{
 							P1("Running");
@@ -848,7 +857,7 @@ command: c_desc period
 	#if defined(PROFILE)
 						profx = new prof("Compiling");
 	#endif	/* defined(PROFILE) */
-					delete[] ((code *)*l);
+					delete[] l->Share();
 					}
 					delete l;
 					delete pt;
@@ -870,7 +879,7 @@ command: c_desc period
 			}
 		}
 ERR_EXIT:
-		vars.clear();
+		CleanupVars();
 		if( PARM->mach->getLexer() == prevlexer && ! PARM->mach->getLexer()->IsSkip())
 			module::UseCurrentModule();
 	};

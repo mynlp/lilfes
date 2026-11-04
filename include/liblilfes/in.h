@@ -77,7 +77,17 @@ public:
 		ref = 1;
 	}
 
-	~lilfesFlexLexer() { if(ShouldDelete) delete s; }
+	~lilfesFlexLexer() { 
+		if(ShouldDelete) delete s; 
+		// Delete the lexer chain - we own the next pointer
+		// Since we incremented next->ref when we were constructed, we should decRef and delete if needed
+		if( next ) {
+			// Decrement refcount and delete if it reaches 0
+			// But we shouldn't recursively delete because that could cause issues
+			// Instead, just delete next directly since we own it
+			delete next;
+		}
+	}
 
 	int Lineno() const { return _line_no; } 
 

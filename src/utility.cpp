@@ -282,12 +282,15 @@ int pushfile(machine *mach, const string &fname, int pi, const string &prefix)
 
 			return 1;
 		}
-#ifdef DEBUG_INCLUDE
 		else
 		{
+			// File not good, delete the stream if we created it
+			if( shouldDelete )
+				delete f;
+#ifdef DEBUG_INCLUDE
 			perror("fail");
-		}
 #endif
+		}
 		search_path_ptr = search_path_ptr->Next();
 	}
 #ifdef DEBUG_INCLUDE

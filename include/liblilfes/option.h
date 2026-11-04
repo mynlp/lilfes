@@ -103,6 +103,14 @@ class lilfes_flag
 	/// 長いオプション名<var>s</var>に対応するlilfes_flagオブジェクトを取得します。
 	static lilfes_flag * GetFlagMap(uchar c) { return flagmap[c];}
 	/// 短いオプション名<var>c</var>に対応するlilfes_flagオブジェクトを取得します。
+	static void Cleanup() {
+		for( _HASHMAP<std::string, lilfes_flag *>::const_iterator it = flagCollection.begin();
+			 it != flagCollection.end(); ++it )
+		{
+			delete it->second;
+		}
+		flagCollection.clear();
+	}
 };
 /// </body></classdef>
 
