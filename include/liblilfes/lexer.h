@@ -36,6 +36,8 @@ public:
 	lexer_t(std::istream *is, const char *filename, int iproginput = 0 );
 	~lexer_t();
 
+	lexer_t& operator=(const lexer_t &lx);
+
 //	operator bool() const { return l != NULL; } 
 	bool operator !() const { return l == NULL; } 
 	operator lilfesFlexLexer *() { return l; }

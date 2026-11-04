@@ -83,7 +83,26 @@ class strsymbol
 public:
 	strsymbol(machine *mach, std::string name);
 	~strsymbol();
-		
+
+	static void Cleanup() {
+		// Iterate over a copy of the keys to avoid issues with hash modifications during iteration
+		std::vector<std::string> keys;
+		for( _HASHMAP<std::string, strsymbol *>::const_iterator it = hash.begin();
+			 it != hash.end(); ++it )
+		{
+			keys.push_back(it->first);
+		}
+		for( size_t i = 0; i < keys.size(); i++ )
+		{
+			_HASHMAP<std::string, strsymbol *>::iterator it = hash.find(keys[i]);
+			if( it != hash.end() )
+			{
+				delete it->second;
+			}
+		}
+		hash.clear();
+	}
+
 	const std::string& GetKey() const { return name; }
   /// キーとしてnameを返します。
 	const char *GetString() const { return name.c_str(); }

@@ -153,7 +153,7 @@ static void init2()
 	l.AddCode(C_RESTORE_REG);
 	l.AddCode(C_RETURN);
 	l.EndCode();
-	finalize_constraint = l;
+	finalize_constraint = l.Share();
 }
 #endif
 

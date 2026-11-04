@@ -407,6 +407,13 @@ static void term()
 	delete pit;
 #endif
 	delete profr; 
+	// Clean up profhash
+	for( std::map<std::string, profbase *>::const_iterator it = profbase::profhash.begin();
+		 it != profbase::profhash.end(); ++it )
+	{
+		delete it->second;
+	}
+	profbase::profhash.clear();
 }
 static InitFunction IF(init, 1);
 static TermFunction TF(term, 1);

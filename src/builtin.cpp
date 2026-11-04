@@ -686,7 +686,7 @@ static void init()
 		cl.AddCode(C_UNIFY2ND, (ushort)1);
 		cl.AddCode(C_RETURN);
 		cl.EndCode();
-		p->AddCodelist(cl);
+		p->AddCodelist(&cl);
 	}
 	{
 		procedure *p = new procedure(module::CoreModule()->Search("\\="), 2);
@@ -701,7 +701,7 @@ static void init()
 		cl.AddCode(C_LASTTRY);
 		cl.AddCode(C_RETURN);
 		cl.EndCode();
-		p->AddCodelist(cl);
+		p->AddCodelist(&cl);
 	}
 	feature::SetBuiltInLimit();
 	type::SetBuiltInLimit();
@@ -742,7 +742,7 @@ static void init2()
 		cl.AddCode(C_EXECUTE, procedure::Search(call_type));
 		cl.EndCode();
 //		cl.DebugOutput();
-		p->AddCodelist(cl);
+		p->AddCodelist(&cl);
 	}
 	{
 		procedure *p = new procedure(module::CoreModule()->Search(";"), 2);
@@ -756,7 +756,7 @@ static void init2()
 		cl.AddCode(C_EXECUTE, procedure::Search(call_type));
 		cl.EndCode();
 //		cl.DebugOutput();
-		p->AddCodelist(cl);
+		p->AddCodelist(&cl);
 	}
 	{
 		procedure *p = new procedure(module::CoreModule()->Search("->"), 2);
@@ -775,7 +775,7 @@ static void init2()
 		cl.AddCode(C_DEALLOC);
 		cl.AddCode(C_EXECUTE, procedure::Search(call_type));
 		cl.EndCode();
-		p->AddCodelist(cl);
+		p->AddCodelist(&cl);
 	}
 	{
 		procedure *p = new procedure(module::CoreModule()->Search("\\+"), 1);
@@ -792,7 +792,7 @@ static void init2()
 		cl.AddCode(C_LASTTRY);
 		cl.AddCode(C_RETURN);
 		cl.EndCode();
-		p->AddCodelist(cl);
+		p->AddCodelist(&cl);
 	}
 }
 
@@ -1342,18 +1342,18 @@ bool lilfes_assert( machine& m, FSP arg1 )
 				{
 					if( head.Follow(f_arg[1]).IsInteger() )
 					{
-						p->AddCodelistINT(*l, info.toparg, head.Follow(f_arg[1]).ReadInteger() );
+						p->AddCodelistINT(l, info.toparg, head.Follow(f_arg[1]).ReadInteger() );
 //						cout << "@@@@@@ ASSERT leaved 1" << endl;
 						return true;
 					}
 					else if( head.Follow(f_arg[1]).IsString() )
 					{
-						p->AddCodelistSTG(*l, info.toparg, head.Follow(f_arg[1]).ReadStringSN());
+						p->AddCodelistSTG(l, info.toparg, head.Follow(f_arg[1]).ReadStringSN());
 //						cout << "@@@@@@ ASSERT leaved 2" << endl;
 						return true;
 					}
 				}
-				p->AddCodelist(*l, info.toparg);
+				p->AddCodelist(l, info.toparg);
 //				cout << "@@@@@@ ASSERT leaved 3" << endl;
 				return true;
 			}
@@ -1441,18 +1441,18 @@ bool lilfes_asserta( machine& m, FSP arg1 )
 				{
 					if( head.Follow(f_arg[1]).IsInteger() )
 					{
-						p->AddCodelistTopINT(*l, info.toparg, head.Follow(f_arg[1]).ReadInteger() );
+						p->AddCodelistTopINT(l, info.toparg, head.Follow(f_arg[1]).ReadInteger() );
 //						cout << "@@@@@@ ASSERT leaved 1" << endl;
 						return true;
 					}
 					else if( head.Follow(f_arg[1]).IsString() )
 					{
-						p->AddCodelistTopSTG(*l, info.toparg, head.Follow(f_arg[1]).ReadStringSN());
+						p->AddCodelistTopSTG(l, info.toparg, head.Follow(f_arg[1]).ReadStringSN());
 //						cout << "@@@@@@ ASSERT leaved 2" << endl;
 						return true;
 					}
 				}
-				p->AddCodelistTop(*l, info.toparg);
+				p->AddCodelistTop(l, info.toparg);
 			}
 		}
 		else

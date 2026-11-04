@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -30,6 +31,10 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
+
 #ifndef YY_YY_YACC_HH_INCLUDED
 # define YY_YY_YACC_HH_INCLUDED
 /* Debug traces.  */
@@ -40,48 +45,57 @@
 extern int yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    TOK_ATOM = 258,
-    TOK_FEAT = 259,
-    TOK_VAR = 260,
-    TOK_STARTP = 261,
-    TOK_MODULENAME = 262,
-    TOK_INTEGER = 263,
-    TOK_STRING = 264,
-    TOK_DOUBLE = 265,
-    TOK_INVALID = 266,
-    TOK_IS = 267,
-    TOK_MOD = 268,
-    TOK_EOF = 269,
-    SUBSUMED_BY = 270,
-    ATTR_DEF = 271,
-    ATOMP = 272,
-    LISTEND = 273,
-    MEANS = 274,
-    MACRO_DEF = 275,
-    QUERY = 276,
-    UMEANS = 277,
-    IF_THEN = 278,
-    NOT = 279,
-    CMP_L = 280,
-    CMP_LE = 281,
-    CMP_G = 282,
-    CMP_GE = 283,
-    CMP_EQ = 284,
-    CMP_NE = 285,
-    NOT_UNIFIABLE = 286,
-    BIT_OR = 287,
-    BIT_AND = 288,
-    INTDIV = 289,
-    USIGN = 290,
-    FEATURE = 291
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    TOK_ATOM = 258,                /* TOK_ATOM  */
+    TOK_FEAT = 259,                /* TOK_FEAT  */
+    TOK_VAR = 260,                 /* TOK_VAR  */
+    TOK_STARTP = 261,              /* TOK_STARTP  */
+    TOK_MODULENAME = 262,          /* TOK_MODULENAME  */
+    TOK_INTEGER = 263,             /* TOK_INTEGER  */
+    TOK_STRING = 264,              /* TOK_STRING  */
+    TOK_DOUBLE = 265,              /* TOK_DOUBLE  */
+    TOK_INVALID = 266,             /* TOK_INVALID  */
+    TOK_IS = 267,                  /* TOK_IS  */
+    TOK_MOD = 268,                 /* TOK_MOD  */
+    TOK_EOF = 269,                 /* TOK_EOF  */
+    SUBSUMED_BY = 270,             /* SUBSUMED_BY  */
+    ATTR_DEF = 271,                /* ATTR_DEF  */
+    ATOMP = 272,                   /* ATOMP  */
+    LISTEND = 273,                 /* LISTEND  */
+    MEANS = 274,                   /* MEANS  */
+    MACRO_DEF = 275,               /* MACRO_DEF  */
+    QUERY = 276,                   /* QUERY  */
+    UMEANS = 277,                  /* UMEANS  */
+    IF_THEN = 278,                 /* IF_THEN  */
+    NOT = 279,                     /* NOT  */
+    CMP_L = 280,                   /* CMP_L  */
+    CMP_LE = 281,                  /* CMP_LE  */
+    CMP_G = 282,                   /* CMP_G  */
+    CMP_GE = 283,                  /* CMP_GE  */
+    CMP_EQ = 284,                  /* CMP_EQ  */
+    CMP_NE = 285,                  /* CMP_NE  */
+    NOT_UNIFIABLE = 286,           /* NOT_UNIFIABLE  */
+    BIT_OR = 287,                  /* BIT_OR  */
+    BIT_AND = 288,                 /* BIT_AND  */
+    INTDIV = 289,                  /* INTDIV  */
+    USIGN = 290,                   /* USIGN  */
+    FEATURE = 291                  /* FEATURE  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
-/* Tokens.  */
+/* Token kinds.  */
+#define YYEMPTY -2
+#define YYEOF 0
+#define YYerror 256
+#define YYUNDEF 257
 #define TOK_ATOM 258
 #define TOK_FEAT 259
 #define TOK_VAR 260
@@ -119,10 +133,9 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
 union YYSTYPE
 {
-#line 195 "yacc.yy" /* yacc.c:1909  */
+#line 195 "yacc.yy"
 
   int      ival;
   double   dval;
@@ -138,9 +151,9 @@ union YYSTYPE
   } appfeatval;
   lilfes::core_p   pval;
 
-#line 142 "yacc.hh" /* yacc.c:1909  */
-};
+#line 155 "yacc.hh"
 
+};
 typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -148,6 +161,8 @@ typedef union YYSTYPE YYSTYPE;
 
 
 
+
 int yyparse (void *parm);
+
 
 #endif /* !YY_YY_YACC_HH_INCLUDED  */

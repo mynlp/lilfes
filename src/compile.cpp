@@ -298,7 +298,7 @@ void CompileType(const type *unifiee, const type *unifier)
 				}
 #endif
 				DeleteCode(c.constraint);
-				c.constraint = cl;
+				c.constraint = cl.Share();
 				delete cl1; 
 			}
 		}
@@ -444,10 +444,10 @@ void CompileType(const type *unifiee, const type *unifier)
 			if( c.coercion != c.coercion_var )
 				DeleteCode(c.coercion_var);
 			DeleteCode(c.coercion);
-			c.coercion = (code *)*cl1;
+			c.coercion = cl1->Share();
 
 			if( same )
-				c.coercion_var = (code *)*cl1;
+				c.coercion_var = cl1->Share();
 			else
 			{
 				if( cl2 == NULL )
@@ -458,7 +458,7 @@ void CompileType(const type *unifiee, const type *unifier)
 #ifdef DEBUG
 				if( DEB ) cl2->DebugOutput();
 #endif
-				c.coercion_var = (code *)*cl2;
+				c.coercion_var = cl2->Share();
 
 				delete cl2;
 			}
@@ -466,7 +466,7 @@ void CompileType(const type *unifiee, const type *unifier)
 #else
 			cl.EndCode();
 			DeleteCode(c.coercion);
-			c.coercion = cl;
+			c.coercion = cl.Share();
 #endif
 		}
 	}
@@ -493,7 +493,7 @@ void CompileType(const type *unifiee, const type *unifier)
 				cl.DebugOutput();
 			}
 #endif
-			unifyOnly[unifiee->GetNFeatures()] = (code *)cl;
+			unifyOnly[unifiee->GetNFeatures()] = cl.Share();
 			new SharedPtr(unifyOnly[unifiee->GetNFeatures()]);
 		}
 //				if( i==7 )
@@ -549,7 +549,7 @@ void CompileType(const type *unifiee, const type *unifier)
 							cl.DebugOutput();
 						}
 #endif
-						unifyOnlyT[unifiee->GetNFeatures()] = cl;
+						unifyOnlyT[unifiee->GetNFeatures()] = cl.Share();
 						new SharedPtr(unifyOnlyT[unifiee->GetNFeatures()]);
 					}
 					DeleteCode(c.unification);
@@ -580,7 +580,7 @@ void CompileType(const type *unifiee, const type *unifier)
 					}
 #endif
 					DeleteCode(c.unification);
-					c.unification = cl;
+					c.unification = cl.Share();
 				}
 			}
 			else if( unifiee_same )
@@ -628,7 +628,7 @@ void CompileType(const type *unifiee, const type *unifier)
 				}
 #endif
 				DeleteCode(c.unification);
-				c.unification = cl;
+				c.unification = cl.Share();
 			}
 			else if( unifier_same )
 			{
@@ -673,7 +673,7 @@ void CompileType(const type *unifiee, const type *unifier)
 				}
 #endif
 				DeleteCode(c.unification);
-				c.unification = cl;
+				c.unification = cl.Share();
 			}
 			else
 			{
@@ -743,7 +743,7 @@ void CompileType(const type *unifiee, const type *unifier)
 				}
 #endif
 				DeleteCode(c.unification);
-				c.unification = cl;
+				c.unification = cl.Share();
 			}
 		}
 	}

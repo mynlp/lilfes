@@ -97,13 +97,13 @@ void SharedPtr::term()
 
 codelist::codelist() 
 {
-	cp = NULL; len = 0; freezed = MELTED; 
+	cp = NULL; len = 0; freezed = MELTED; m_shared = false;
 	Refs = NULL; Defs = NULL;
 }
 
 codelist::~codelist() 
 {
-	if( !freezed )
+	if( !m_shared )
 	{
 		delete[] cp;
 	}

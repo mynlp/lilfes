@@ -42,6 +42,10 @@
 
 namespace lilfes {
 
+class codelist;
+
+
+
 ////////////////////////////////////////
 /// <classdef>
 /// <name> proc_t </name>
@@ -229,17 +233,17 @@ public:
   /// その述語をspecialにし、procthunk<var>p</var>をその述語のprocthunkにします。
 	void ClearSpecialThunk();
   /// その述語のspecialをfalseにし、procthunkを情報収集をするもの(proc_selectthunk)にします。
-	virtual void AddCodelist(code *c, const type *toptype = NULL);
-  /// code<var>c</var>を節リストに追加します。配列の後ろに追加されます。
-	virtual void AddCodelistINT(code *c, const type *toptype, mint i);
+	virtual void AddCodelist(codelist *cl, const type *toptype = NULL);
+  /// code<var>cl</var>を節リストに追加します。配列の後ろに追加されます。
+	virtual void AddCodelistINT(codelist *cl, const type *toptype, mint i);
   /// 第１引数が整数型のインスタンスの場合の、code<var>c</var>を節リストに追加します。mint<var>i</var>にはその整数値が入ります。配列の後ろに追加されます。
-	virtual void AddCodelistSTG(code *c, const type *toptype, sserial ss);
+	virtual void AddCodelistSTG(codelist *cl, const type *toptype, sserial ss);
   /// 第１引数が文字列型のインスタンスの場合の、code<var>c</var>を節リストに追加します。sserial<var>ss</var>にはその文字列のシリアル番号が入ります。配列の後ろに追加されます。
-	virtual void AddCodelistTop(code *c, const type *toptype = NULL);
+	virtual void AddCodelistTop(codelist *cl, const type *toptype = NULL);
   /// code<var>c</var>を節リストに追加します。配列の先頭に追加されます。
-	virtual void AddCodelistTopINT(code *c, const type *toptype, mint i);
+	virtual void AddCodelistTopINT(codelist *cl, const type *toptype, mint i);
     /// 第１引数が整数型のインスタンスの場合の、code<var>c</var>を節リストに追加します。mint<var>i</var>にはその整数値が入ります。配列の先頭に追加されます。
-	virtual void AddCodelistTopSTG(code *c, const type *toptype, sserial ss);
+	virtual void AddCodelistTopSTG(codelist *cl, const type *toptype, sserial ss);
   /// 第１引数が文字列型型のインスタンスの場合の、code<var>c</var>を節リストに追加します。sserial<var>ss</var>にはその文字列のシリアル番号が入ります。配列の先頭に追加されます。
 	virtual void SetTrace(bool tr);
   /// その述語のデバッグをするかどうかを設定します。
@@ -288,12 +292,12 @@ public:
   /// <var>name</var>：表現タイプ<br>
   /// <var>arity</var>：引数の数<br>
   /// <var>thunk</var>：対応するprocthunk<br>
-	virtual void AddCodelist(code *c, const type *toptype = NULL);
-	virtual void AddCodelistINT(code *c, const type *toptype, mint i);
-	virtual void AddCodelistSTG(code *c, const type *toptype, sserial ss);
-	virtual void AddCodelistTop(code *c, const type *toptype = NULL);
-	virtual void AddCodelistTopINT(code *c, const type *toptype, mint i);
-	virtual void AddCodelistTopSTG(code *c, const type *toptype, sserial ss);
+	virtual void AddCodelist(codelist *cl, const type *toptype = NULL);
+	virtual void AddCodelistINT(codelist *cl, const type *toptype, mint i);
+	virtual void AddCodelistSTG(codelist *cl, const type *toptype, sserial ss);
+	virtual void AddCodelistTop(codelist *cl, const type *toptype = NULL);
+	virtual void AddCodelistTopINT(codelist *cl, const type *toptype, mint i);
+	virtual void AddCodelistTopSTG(codelist *cl, const type *toptype, sserial ss);
 	virtual void SetTrace(bool tr);
 };
 /// </body></classdef>

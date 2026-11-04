@@ -143,4 +143,10 @@ void strsymbol::gc(machine *mach)
 
 }
 
+// Cleanup strsymbol hash
+void term() {
+	strsymbol::Cleanup();
+}
+static TermFunction TF(term, 70);
+
 } // namespace lilfes
